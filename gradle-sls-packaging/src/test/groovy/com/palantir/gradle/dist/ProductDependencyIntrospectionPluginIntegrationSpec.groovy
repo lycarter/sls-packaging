@@ -21,6 +21,10 @@ import nebula.test.dependencies.DependencyGraph
 import nebula.test.dependencies.GradleDependencyGenerator
 
 class ProductDependencyIntrospectionPluginIntegrationSpec extends IntegrationSpec {
+    void setup() {
+        memorySafeMode = true
+    }
+
     def "adds product dependency constraints to configuration"() {
         buildFile << 'apply plugin: com.palantir.gradle.dist.ProductDependencyIntrospectionPlugin'
 

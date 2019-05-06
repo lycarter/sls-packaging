@@ -21,6 +21,7 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule
 import com.palantir.gradle.dist.GradleIntegrationSpec
 import com.palantir.gradle.dist.SlsManifest
 import com.palantir.gradle.dist.service.tasks.LaunchConfigTask
+import java.util.concurrent.TimeUnit
 import java.util.zip.ZipFile
 import org.gradle.testkit.runner.TaskOutcome
 import org.junit.Assert
@@ -897,7 +898,7 @@ class ServiceDistributionPluginTests extends GradleIntegrationSpec {
 
     int execWithExitCode(String... tasks) {
         Process proc = new ProcessBuilder().command(tasks).directory(projectDir).start()
-        int result = proc.waitFor()
+        int result = proc.waitFor(5, TimeUnit.SECONDS);
         return result
     }
 

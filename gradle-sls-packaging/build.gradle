@@ -76,6 +76,9 @@ publishPlugins.onlyIf {
     project.version ==~ /[0-9]+(\.[0-9]+)+(-rc[0-9]+)?(-alpha[0-9]+)?/
 }
 
+test {
+    testLogging.showStandardStreams = true
+}
 // Configure the publishPlugins task
 tasks.publish.dependsOn publishPlugins
 project.ext.'gradle.publish.key' = System.env["GRADLE_KEY"]

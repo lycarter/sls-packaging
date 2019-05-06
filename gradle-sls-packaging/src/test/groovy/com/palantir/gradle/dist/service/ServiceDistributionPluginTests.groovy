@@ -71,7 +71,6 @@ class ServiceDistributionPluginTests extends GradleIntegrationSpec {
         // wait for the Java process to start up and emit output
         sleep 1000
         file('dist/service-name-0.0.1/var/log/startup.log', projectDir).text.contains('Test started\n')
-        execWithExitCode('dist/service-name-0.0.1/service/bin/init.sh', 'start') == 0
         execWithExitCode('dist/service-name-0.0.1/service/bin/init.sh', 'status') == 0
         execWithExitCode('dist/service-name-0.0.1/service/bin/init.sh', 'restart') == 0
         execWithExitCode('dist/service-name-0.0.1/service/bin/init.sh', 'stop') == 0

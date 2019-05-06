@@ -18,6 +18,7 @@ package com.palantir.gradle.dist.service
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.fasterxml.jackson.datatype.guava.GuavaModule
+import com.google.common.base.Preconditions
 import com.palantir.gradle.dist.GradleIntegrationSpec
 import com.palantir.gradle.dist.SlsManifest
 import com.palantir.gradle.dist.service.tasks.LaunchConfigTask
@@ -897,9 +898,7 @@ class ServiceDistributionPluginTests extends GradleIntegrationSpec {
 
     int execWithExitCode(String... tasks) {
         Process proc = new ProcessBuilder().command(tasks).directory(projectDir).start()
-        if (proc.waitFor(5, TimeUnit.SECONDS)) {
-            throw new RuntimeException();
-        }
+        Preconditions.checkState(proc.waitFor(20, TimeUnit.SECONDS), "subprocess took longer than 20s to complete")
         return proc.exitValue();
     }
 

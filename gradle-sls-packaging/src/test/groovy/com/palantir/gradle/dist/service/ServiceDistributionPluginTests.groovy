@@ -898,7 +898,8 @@ class ServiceDistributionPluginTests extends GradleIntegrationSpec {
 
     int execWithExitCode(String... tasks) {
         Process proc = new ProcessBuilder().command(tasks).directory(projectDir).start()
-        Preconditions.checkState(proc.waitFor(20, TimeUnit.SECONDS), "subprocess took longer than 20s to complete")
+        Preconditions.checkState(proc.waitFor(1, TimeUnit.MINUTES),
+                "subprocess took longer than 1 minute to complete")
         return proc.exitValue();
     }
 

@@ -11,11 +11,12 @@ jobs:
       GRADLE_OPTS: -Dorg.gradle.console=plain -Dorg.gradle.internal.launcher.welcomeMessageEnabled=false
       CIRCLE_TEST_REPORTS: /home/circleci/junit
       CIRCLE_ARTIFACTS: /home/circleci/artifacts
+      _JAVA_OPTIONS: '-Xmx2048m'
     steps:
       - checkout
       - restore_cache: { key: 'gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}' }
       - restore_cache: { key: 'gradle-cache-{{ checksum "versions.props" }}-{{ checksum "build.gradle" }}' }
-      - run: ./gradlew --parallel --stacktrace  --continue --max-workers=8 build
+      - run: ./gradlew --no-daemon --parallel --stacktrace  --continue --max-workers=8 --profile build
       - save_cache:
           key: 'gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}'
           paths: [ ~/.gradle/wrapper ]
@@ -29,9 +30,9 @@ jobs:
           command: |
             # publishing snapshots to bintray does not work, so we only publish from tag builds (not develop)
             if [[ "${CIRCLE_TAG}" =~ [0-9]+(\.[0-9]+)+(-[a-zA-Z]+[0-9]*)* ]]; then
-              ./gradlew --parallel --stacktrace  --continue --max-workers=8 --profile publish
+              ./gradlew --no-daemon --parallel --stacktrace  --continue --max-workers=8 --profile publish
             else
-              ./gradlew --parallel --stacktrace  --continue --max-workers=8 --profile publishToMavenLocal
+              ./gradlew --no-daemon --parallel --stacktrace  --continue --max-workers=8 --profile publishToMavenLocal
               mkdir -p $CIRCLE_ARTIFACTS/poms
               find . -name 'pom-default.xml' -exec cp --parents {} $CIRCLE_ARTIFACTS/poms \;
             fi
@@ -45,11 +46,12 @@ jobs:
       GRADLE_OPTS: -Dorg.gradle.console=plain -Dorg.gradle.internal.launcher.welcomeMessageEnabled=false
       CIRCLE_TEST_REPORTS: /home/circleci/junit
       CIRCLE_ARTIFACTS: /home/circleci/artifacts
+      _JAVA_OPTIONS: '-XX:ActiveProcessorCount=8 -Xmx2048m'
     steps:
       - checkout
       - restore_cache: { key: 'gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}' }
       - restore_cache: { key: 'gradle-cache-{{ checksum "versions.props" }}-{{ checksum "build.gradle" }}' }
-      - run: ./gradlew --parallel --stacktrace  --continue build
+      - run: ./gradlew --no-daemon --parallel --stacktrace  --continue --profile build
       - save_cache:
           key: 'gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}'
           paths: [ ~/.gradle/wrapper ]

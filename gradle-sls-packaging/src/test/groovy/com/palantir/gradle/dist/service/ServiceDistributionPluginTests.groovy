@@ -898,8 +898,10 @@ class ServiceDistributionPluginTests extends GradleIntegrationSpec {
 
     int execWithExitCode(String... tasks) {
         Process proc = new ProcessBuilder().command(tasks).directory(projectDir).start()
-        int result = proc.waitFor(5, TimeUnit.SECONDS);
-        return result
+        if (proc.waitFor(5, TimeUnit.SECONDS)) {
+            throw new RuntimeException();
+        }
+        return proc.exitValue();
     }
 
     String execWithOutput(String... tasks) {
